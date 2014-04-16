@@ -9,30 +9,50 @@ jQuery(function() {
     // inicial da curva x=400 y=405
     // final da curva x=450 y=395
     // C {x da linha para onde vai} {y do próximo nó + 55} {x do nó atual} {y do nó atual - 55} {x y de onde parte}
-    var master = new Branch(paper,height,x_master,'red');
-    var branch = paper.path("M 400 0 V 350 C 400 405 450 395 450 450");				
-    branch.attr("stroke", "blue");
-    branch.attr("stroke-width", "3");
-    console.log(master.get('color'));
-   var revision = new Revision(master,350);
+    var master = new Master(paper,height,x_master,'red');
+    var branch = new Branch(paper,400,350,'blue','left');
+    var branch = new Branch(paper,500,350,'blue','right');
+    // branch.attr("stroke", "blue");
+    // branch.attr("stroke-width", "3");
+    // console.log(master.get('color'));
+   // var revision = new Revision(master,350);
 
-    var circle2 = paper.circle(x_master,450,CIRCLE_RADIUS);
-    circle2.attr('fill','blue');
-    circle2.attr('stroke','blue');
-    circle2.mouseover(function(){
-	this.animate({r:CIRCLE_HOVER_RADIUS},100); 
-    });
-    circle2.mouseout(function(){
-	this.animate({r:CIRCLE_RADIUS},100); 
-    });
-
-    var circle3 = paper.circle(400,350,CIRCLE_RADIUS);
-    circle3.attr('fill','blue');
-    circle3.attr('stroke','blue');
+    // var circle2 = paper.circle(x_master,450,CIRCLE_RADIUS);
+    // circle2.attr('fill','blue');
+    // circle2.attr('stroke','blue');
+    // circle2.mouseover(function(){
+	// this.animate({r:CIRCLE_HOVER_RADIUS},100); 
+    // });
+    // circle2.mouseout(function(){
+	// this.animate({r:CIRCLE_RADIUS},100); 
+    // });
+    //
+    // var circle3 = paper.circle(400,350,CIRCLE_RADIUS);
+    // circle3.attr('fill','blue');
+    // circle3.attr('stroke','blue');
 
 });
 
-function Branch(paper,height,x,color){
+function Branch(paper,x,y,color,orientation){
+    this.paper = paper;
+    this.color = color;
+    
+    function get(attr){
+        return this.attr;
+    }
+
+    if (orientation == 'left')
+        var path = paper.path("M "+ x +" 0 V "+ y +" C "+ x +" "+ (x+5) +" "+ (x+50) +" "+ (y+45) +" "+ (x+50) +" "+ (x+50));
+
+    if (orientation == 'right')
+        var path = paper.path("M "+ x +" 0 V "+ y +" C "+ x +" "+ (x-95) +" "+ (x-50) +" "+ (y+45) +" "+ (x-50) +" "+ (x-50));
+
+    path.attr("stroke", color);
+    path.attr("stroke-width", "3");
+    return path;
+}
+
+function Master(paper,height,x,color){
     this.paper = paper;
     this.x = x;
     this.color = color;
