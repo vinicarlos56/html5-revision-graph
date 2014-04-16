@@ -1,5 +1,6 @@
 var CIRCLE_RADIUS = 5;
 var CIRCLE_HOVER_RADIUS = 10;
+var over=false;
 
 jQuery(function() {  
     var paper = new Raphael(document.getElementById('canvas_container'), 500, 500);  
@@ -18,22 +19,25 @@ jQuery(function() {
     var branch2 = new Branch(paper,500,350,'blue','right');
     branch2.draw();
 
-   var revision = new Revision(master,450);
+   var first_rev_master = new Revision(master,450);
+   first_rev_master.register('Teste');
 
-    // var circle2 = paper.circle(x_master,450,CIRCLE_RADIUS);
-    // circle2.attr('fill','blue');
-    // circle2.attr('stroke','blue');
-    // circle2.mouseover(function(){
-	// this.animate({r:CIRCLE_HOVER_RADIUS},100); 
-    // });
-    // circle2.mouseout(function(){
-	// this.animate({r:CIRCLE_RADIUS},100); 
-    // });
-    //
-    // var circle3 = paper.circle(400,350,CIRCLE_RADIUS);
-    // circle3.attr('fill','blue');
-    // circle3.attr('stroke','blue');
+   var sec_rev_master = new Revision(master,390);
+   sec_rev_master.register('teste 2');
 
+   new Revision(master,350);
+
+   new Revision(branch,300);
+   new Revision(branch,250);
+
+
+});
+
+$(document).mousemove(function(e){
+
+   if (over){
+      $('#tip').css("left", e.clientX+20).css("top", e.clientY+20);
+    }
 });
 
 var Branch = function(paper,x,height,color,orientation){
@@ -83,9 +87,37 @@ var Revision = function(branch,y_position){
     circle.attr('fill',branch.color);
     circle.attr('stroke',branch.color);
 
-    return circle;
+    circle.mouseover(function(){
+        this.animate({r:CIRCLE_HOVER_RADIUS},100); 
+    });
+    circle.mouseout(function(){
+        this.animate({r:CIRCLE_RADIUS},100); 
+    });
+
+    this.circle = circle;
 }
-    
+
+Revision.prototype = {
+    getNode: function(){
+        return this.circle.node;
+    },
+
+    register: function(txt){
+
+        var tip = $("#tip");
+        var node = this.circle.node;
+
+        $(node).on('mouseenter',function(){
+            tip.html(txt);
+            tip.fadeIn();
+            over = true;
+        }).on('mouseleave',function(){
+            tip.fadeOut(200);
+            over = false;
+        });
+    }
+}
+
 //Helper method to take x,y and r and return a path instruction string.
 // x and y are center and r is the radius
 function getCircletoPath(x , y, r)  {  
