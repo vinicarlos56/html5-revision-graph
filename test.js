@@ -21,7 +21,7 @@
 
     Branch.prototype.draw = function() {
       var path;
-      path = this.paper.path('M' + this.x + ' ' + this.revision_end + ' V ' + this.revision_start);
+      path = this.paper.path("M " + this.x + " " + this.revision_end + " V " + this.revision_start);
       path.attr('stroke', this.color);
       return path.attr('stroke-width', '3');
     };
