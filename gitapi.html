@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ember Starter Kit</title>
+  <link rel="stylesheet" href="starter-kit-1.8.1/css/normalize.css">
+  <link rel="stylesheet" href="starter-kit-1.8.1/css/style.css">
+</head>
+<body>
+  <script type="text/x-handlebars">
+    <ul>
+    {{#each App.ListCommits}}
+      <li>{{message}}</li>
+    {{/each}}
+    </ul>  
+  </script>
+
+
+  <script src="starter-kit-1.8.1/js/libs/jquery-1.10.2.js"></script>
+  <script src="starter-kit-1.8.1/js/libs/handlebars-v1.3.0.js"></script>
+  <script src="starter-kit-1.8.1/js/libs/ember-1.8.1.js"></script>
+  <script src="app-test.js"></script>
+  <!-- to activate the test runner, add the "?test" query string parameter -->
+  <!-- <script src="starter&#45;kit&#45;1.8.1/tests/runner.js"></script> -->
+</body>
+</html>
