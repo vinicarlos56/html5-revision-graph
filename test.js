@@ -89,6 +89,9 @@
       if (this.branch_to.revision_start > this.branch_from.revision_start && this.branch_from.x > this.branch_to.x) {
         path = this.paper.path("M " + this.branch_from.x + " " + this.branch_from.revision_end + " V " + this.branch_from.revision_end + " C " + this.branch_from.x + " " + (this.branch_from.revision_end - 55) + " " + this.branch_to.x + " " + (this.branch_from.revision_end - 50) + " " + this.branch_to.x + " " + (this.branch_from.revision_end - 100));
       }
+      if (this.branch_to.revision_start < this.branch_from.revision_start && this.branch_to.x > this.branch_from.x) {
+        path = this.paper.path("M " + this.branch_to.x + " " + this.branch_to.revision_start + " V " + this.branch_to.revision_start + " C " + this.branch_to.x + " " + (this.branch_to.revision_start + 55) + " " + this.branch_from.x + " " + (this.branch_to.revision_start + 50) + " " + this.branch_from.x + " " + (this.branch_to.revision_start + 100));
+      }
       if (false) {
         path = this.paper.path("M " + this.branch_to.x + " " + this.branch_to.revision_start + " V " + this.branch_to.revision_start + " C " + this.branch_to.x + " " + (this.branch_to.revision_start + 55) + " " + (this.branch_to.x - 50) + " " + (this.branch_to.revision_start + 45) + " " + (this.branch_to.x - 50) + " " + (this.branch_to.revision_start + 100));
       }
@@ -118,6 +121,7 @@
     new Path(paper, master, left_branch);
     new Path(paper, left_branch, master);
     new Path(paper, right_branch, master);
+    new Path(paper, master, right_branch);
     new Revision(master, 450);
     new Revision(left_branch, 350);
     new Revision(left_branch, 250);

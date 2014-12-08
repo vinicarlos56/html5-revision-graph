@@ -73,6 +73,15 @@ class Path
                  #{@branch_to.x} #{@branch_from.revision_end-100}"
             )
 
+        if  @branch_to.revision_start < @branch_from.revision_start and @branch_to.x > @branch_from.x 
+            path = @paper.path(
+                "M #{@branch_to.x} #{@branch_to.revision_start}
+                 V #{@branch_to.revision_start} 
+                 C #{@branch_to.x} #{@branch_to.revision_start+55}
+                 #{@branch_from.x} #{@branch_to.revision_start+50}
+                 #{@branch_from.x} #{@branch_to.revision_start+100}"
+            )
+
         if false
             path = @paper.path(
                 "M #{@branch_to.x} #{@branch_to.revision_start}
@@ -108,6 +117,7 @@ jQuery ->
     new Path(paper, master, left_branch)
     new Path(paper, left_branch, master) 
     new Path(paper, right_branch, master)
+    new Path(paper, master, right_branch)
 
     new Revision(master, 450)
     new Revision(left_branch, 350)
