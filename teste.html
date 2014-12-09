@@ -3,7 +3,8 @@
 <title>Raphael Play</title>
 <script src="jquery.min.js"></script>
 <script type="text/javascript" src="raphael-min.js"></script>
-<script type="text/javascript" src="test.js"></script>
+<link rel="stylesheet" href="starter-kit-1.8.1/css/normalize.css">
+<link rel="stylesheet" href="starter-kit-1.8.1/css/style.css">
 <style type="text/css">
   #canvas_container {
      width: 500px;
@@ -21,6 +22,21 @@
 </style>
 </head>
 <body>
+  <script type="text/x-handlebars">
+    <ul>
+    {{#each App.ListCommits}}
+      <li>{{message}}</li>
+    {{/each}}
+    </ul>  
+  </script>
+
+
+  <script src="starter-kit-1.8.1/js/libs/jquery-1.10.2.js"></script>
+  <script src="starter-kit-1.8.1/js/libs/handlebars-v1.3.0.js"></script>
+  <script src="starter-kit-1.8.1/js/libs/ember-1.8.1.js"></script>
+<script type="text/javascript" src="test.js"></script>
+  <!-- <script src="app&#45;test.js"></script> -->
+
   <div id="canvas_container"></div>
   <div id="tip"></div>
 </body>

@@ -4,12 +4,21 @@ over = false
 
 class Branch
     constructor: (@paper,@x,@revision_end,@revision_start,@color) ->
+        @revisions = []
 
     draw: =>
         path = @paper.path "M #{@x} #{@revision_end} V #{@revision_start}"
 
         path.attr('stroke',@color) 
         path.attr('stroke-width','3') 
+
+    addRevision: (@revision) ->
+        @revisions.push(@revision)
+
+    getLastRevision: =>
+        @revisions[@revisions.length-1]
+
+
 
 class Revision
     constructor: (@branch,@y_position) ->
@@ -42,7 +51,7 @@ class Revision
             over = false
         )
 
-class Path
+class Merge
     constructor: (@paper,@branch_from,@branch_to) ->
         if @branch_to.revision_start < @branch_from.revision_start and @branch_from.x > @branch_to.x
 
@@ -82,23 +91,47 @@ class Path
                  #{@branch_from.x} #{@branch_to.revision_start+100}"
             )
 
-        if false
-            path = @paper.path(
-                "M #{@branch_to.x} #{@branch_to.revision_start}
-                 V #{@branch_to.revision_start}
-                 C #{@branch_to.x} #{@branch_to.revision_start+55}
-                 #{@branch_to.x-50} #{@branch_to.revision_start+45} 
-                 #{@branch_to.x-50} #{@branch_to.revision_start+100}"
-            )
-
-
         if path != undefined 
             path.attr("stroke", @color)
             path.attr("stroke-width", "3")
 
-        console.log path
 
+window.App = Ember.Application.create()
+App.Commit = Ember.Object.extend()
+App.ListCommits = Ember.ArrayController.create {}
 
+owner = 'vinicarlos56'
+repo = 'html5-revision-graph'
+
+get = (sha,master) -> 
+    $.getJSON("https://api.github.com/repos/#{owner}/#{repo}/git/commits/#{sha}").then( 
+        (response) ->
+            App.ListCommits.pushObject(App.Commit.create(response))
+
+            if typeof master.getLastRevision() isnt "undefined"
+                master.addRevision(new Revision(master, master.getLastRevision().y_position - 50))
+            else
+                master.addRevision(new Revision(master, 500))
+
+            if typeof response.parents[0] isnt "undefined"
+                get(response.parents[0].sha, master)
+    )
+
+$(document).ready(->
+
+    canvas_container = document.getElementById 'canvas_container'
+    paper = new Raphael(canvas_container, 600, 500)
+    x_master = 450
+    height = 500
+
+    master = new Branch(paper, 450, 0, 500, 'red')
+    master.draw()
+
+    get('717e721cf1b5255938e930af4872135601f8d841',master)
+
+)
+
+return
 jQuery ->
     canvas_container = document.getElementById 'canvas_container'
     paper = new Raphael(canvas_container, 600, 500)
@@ -108,22 +141,28 @@ jQuery ->
     master = new Branch(paper, 450, 0, 500, 'red')
     master.draw()
 
-    left_branch = new Branch(paper, 400, 250, 350, 'blue')
-    left_branch.draw()
+    # blue_branch = new Branch(paper, 400, 250, 350, 'blue')
+    # blue_branch.draw()
+    #
+    # green_branch = new Branch(paper, 500, 250, 350, 'green')
+    # green_branch.draw()
+    #
+    # purple_branch = new Branch(paper, 350, 50, 150, 'purple')
+    # purple_branch.draw()
+    #
+    #
+    # new Merge(paper, master, blue_branch)
+    # new Merge(paper, blue_branch, purple_branch) 
+    # new Merge(paper, green_branch, master)
+    # new Merge(paper, master, green_branch)
 
-    right_branch = new Branch(paper, 500, 250, 350, 'green')
-    right_branch.draw()
-
-    new Path(paper, master, left_branch)
-    new Path(paper, left_branch, master) 
-    new Path(paper, right_branch, master)
-    new Path(paper, master, right_branch)
-
-    new Revision(master, 450)
-    new Revision(left_branch, 350)
-    new Revision(left_branch, 250)
-    new Revision(right_branch, 350)
-    new Revision(right_branch, 250)
-    new Revision(master, 150)
+    rev = new Revision(master, 450)
+    master.addRevision(rev)
+    console.log master.getLastRevision()
+    # new Revision(blue_branch, 350)
+    # new Revision(blue_branch, 250)
+    # new Revision(green_branch, 350)
+    # new Revision(green_branch, 250)
+    # new Revision(master, 150)
 
     return
